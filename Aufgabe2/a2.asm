@@ -11,6 +11,7 @@ ARR: db 00111111b, 00000110b, 01011011b, 01001111b, 01100110b, 01101101b, 011111
 
 START: 
   mov al, H
+  mov cl, 4
   out LED_h, al
   
   in al, 00h; Port 0 in al ; z. B. 0000'0000
@@ -28,8 +29,9 @@ START:
   ; Read 
   in al, 00h
   out 00h, al
-  ; Isolate High Nibble
+  ; Isolate High Nibble + shift nach rechts um 4 Stellen
   AND al, 11110000b
+  shr al, cl
   
   ; LED_L
   ;lea bx, ARR
