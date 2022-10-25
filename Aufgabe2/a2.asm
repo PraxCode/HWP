@@ -16,10 +16,7 @@ START:
   in al, 00h; Port 0 in al ; z. B. 0000'0000
   out 00h, al
   ; Isolate Low Nibble
-  mov cl, 4
-  shl al, cl
-  shr al, cl
-  mov cl, 0
+  AND al, 00001111b
   
 
   ; LED_R
@@ -32,10 +29,7 @@ START:
   in al, 00h
   out 00h, al
   ; Isolate High Nibble
-  mov cl, 4
-  shr al, cl
-  ;shl al, cl
-  mov cl, 0
+  AND al, 11110000b
   
   ; LED_L
   ;lea bx, ARR
