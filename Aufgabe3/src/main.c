@@ -1,3 +1,4 @@
+#include <assert.h>
 #include <malloc.h>
 #include <stdio.h>
 #include <string.h>
@@ -6,61 +7,58 @@
 #define ROWS 3
 
 void memdump(unsigned char *str, unsigned zeilen);
-int memreplace(char *string, char cin, char cout, char **caddr);
+int findstring(char **start, char *a);
 
-int main(int argc, char *argv[]) {
-  memdump((unsigned char *)*argv, ROWS);
+int main(int argc, char **argv) {
+  if (argc != 3) {
+    printf("%s", "Invalid Use: Need 3 arguments");
+    return 0;
+  }
+
+  int length = strlen(argv[1]);
+  int needed_rows = (length / 16);
+  if (length % 16 != 0) {
+    needed_rows++;
+  }
+  printf("Needed Rows: %i\n", needed_rows);
+
+  memdump((unsigned char *)argv[1], needed_rows);
   printf("\n");
-  char *copy = malloc(argc * sizeof(char));
-  strcpy(copy, *argv);
 
-  // printf("\n%s", copy);
-
-  char *returnVal[2]; // returnVal[0] -> Count of exchanges | [1] -> last -1
-                      // exchange address
-  memreplace(copy, 'i', 'j', returnVal);
-  memdump((unsigned char *)copy, 1);
-
-  free(copy);
   return 0;
 }
-
-void printHeader() {
+void printheader() {
   // Header
   printf("%s", "ADDR ");
-  // Hex
-  for (int i = 0; i < ADDR_PER_ROW; i++) {
-    printf("0%X ", i);
-  }
   // Ascii
   for (int i = 0; i < ADDR_PER_ROW; i++) {
     printf("%X", i);
   }
-
   printf("\n");
 }
-
 void memdump(unsigned char *str, unsigned zeilen) {
-  printHeader();
+  printheader();
+
+  // Find next address that divides 16
+  unsigned char *addr = (unsigned char *)(*str & 0xF0);
 
   for (int zeile = 0; zeile < zeilen; zeile++) {
-    // * 16, da 16 Byte pro Zeile im memdump
-    printf("0x%X ", str[zeile * ADDR_PER_ROW]);
+    char addr = str[zeile * ADDR_PER_ROW];
+    printf("0x%X ", addr);
 
-    for (int c = 0; c < ADDR_PER_ROW; c++) {
-
-      char character = str[zeile];
-      if (character < 16) {
-        printf("0%x ", character);
-      } else {
-        printf("%x ", character);
-      }
+    /*
+    if (*str < 31 || *str < 127) {
+      c = '.';
+    } else {
+      c = *str;
     }
+    */
     for (int c = 0; c < ADDR_PER_ROW; c++) {
-      printf("%c", str[c]);
+      printf("%c", str[c + (zeile * ADDR_PER_ROW)]);
     }
     printf("\n");
+    str++;
   }
 }
 
-int memreplace(char *string, char cin, char cout, char **caddr) { return 0; }
+int findstring(char **start, char *a) { return 0; }

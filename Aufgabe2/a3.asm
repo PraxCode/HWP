@@ -25,11 +25,11 @@ START:  mov cl, 4 ; For Shiftwidth
 	      AND al, 11110000b ; Isolate High Nibble
 	      shr al, cl ; Shift High Nibble to Lower Half
 
-	      SBB dl, al ; Sub with carry 
+	      SUB dl, al ; Sub with carry 
 	      mov al, dl
 	      AND al, 00001111b
 	      out 0, al
-	      lea bx, ARR
+	      mov bx, ARR
 	      xlat
 	      out LEDR, al
 	      jmp START
