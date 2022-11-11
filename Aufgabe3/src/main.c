@@ -1,5 +1,6 @@
 #include <assert.h>
 #include <malloc.h>
+#include <stdint.h>
 #include <stdio.h>
 #include <string.h>
 
@@ -27,6 +28,7 @@ int main(int argc, char **argv) {
 
   return 0;
 }
+
 void printheader() {
   // Header
   printf("%s", "ADDR ");
@@ -36,28 +38,23 @@ void printheader() {
   }
   printf("\n");
 }
+
 void memdump(unsigned char *str, unsigned zeilen) {
   printheader();
 
   // Find next address that divides 16
-  unsigned char *addr = (unsigned char *)(*str & 0xF0);
+  // unsigned char *addr = (unsigned char *)(*str & 0xF0);
 
+  uintptr_t addr = (uintptr_t)str & 0xF0;
   for (int zeile = 0; zeile < zeilen; zeile++) {
-    char addr = str[zeile * ADDR_PER_ROW];
-    printf("0x%X ", addr);
+    // char addr = str[zeile * ADDR_PER_ROW];
+    printf("0x%X ", (unsigned int)addr);
 
-    /*
-    if (*str < 31 || *str < 127) {
-      c = '.';
-    } else {
-      c = *str;
-    }
-    */
     for (int c = 0; c < ADDR_PER_ROW; c++) {
       printf("%c", str[c + (zeile * ADDR_PER_ROW)]);
     }
     printf("\n");
-    str++;
+    addr += 16;
   }
 }
 
