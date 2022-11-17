@@ -26,11 +26,7 @@ int main(int argc, char **argv)
     char *searched = argv[2];
     int count = findstring(&string, searched);
     printf("After Function: %p::0x%p\n", searched, &searched);
-    if (searched != NULL){
-        printf("Address of penultimate substring, that has been found: 0x%p.\nCount of substring-occurrences: %i", searched, count);
-    } else {
-        printf("%s", "NULL");
-    }
+    printf("Address of penultimate substring, that has been found: 0x%p.\nCount of substring-occurrences: %i\n", searched, count);
     free(string);
     return 0;
 }
@@ -88,7 +84,10 @@ int findstring(char **string_array, char *searched_string)
     char *last_addr = NULL;
     char *penultimate_addr = NULL;
 
-    char *substring = string;
+    // substring needs to be moved - length of searched string,
+    // otherwise it will skip elements at the very beginning
+    char *substring = string - length_of_searched;     
+    
     while (substring)
     {
         // strstr() returns address of first substring-occurrence,
