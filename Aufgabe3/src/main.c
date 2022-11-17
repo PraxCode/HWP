@@ -25,9 +25,12 @@ int main(int argc, char **argv)
 
     char *searched = argv[2];
     int count = findstring(&string, searched);
-    printf("After Function: %p::0x%p\n", searched, &searched);
-    printf("Address of penultimate substring, that has been found: 0x%p.\nCount of substring-occurrences: %i\n", searched, count);
-    free(string);
+    printf("After Function: %p::%p\n", searched, &searched);
+    printf("Address of penultimate substring, that has been found: %p.\nCount of substring-occurrences: %i\n", searched, count);
+
+    if (string) {
+      free(string);
+    }
     return 0;
 }
 
@@ -56,7 +59,7 @@ void memdump(unsigned char *memblock, unsigned length)
     for (int zeile = 0; zeile < needed_rows; zeile++)
     {
         // char addr = str[zeile * ADDR_PER_ROW];
-        printf("0x%X\t", (unsigned int) addr);
+        printf("%X\t", (unsigned int) addr);
 
         for (int c = 0; c < ADDR_PER_ROW; c++)
         {
@@ -101,7 +104,7 @@ int findstring(char **string_array, char *searched_string)
         last_addr = substring;
     }
 
-    searched_string = penultimate_addr;
-    printf("\nIn Function: 0x%p::0x%p\n", searched_string, penultimate_addr);
+    string_array = &penultimate_addr;
+    printf("\nIn Function: %p::%p\n", searched_string, penultimate_addr);
     return occurrences;
 }
