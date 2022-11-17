@@ -25,12 +25,11 @@ int main(int argc, char **argv)
 
     char *searched = argv[2];
     int count = findstring(&string, searched);
-    printf("After Function: %p::%p\n", searched, &searched);
     printf("Address of penultimate substring, that has been found: %p.\nCount of substring-occurrences: %i\n", searched, count);
 
-    if (string) {
+    if (string) 
       free(string);
-    }
+
     return 0;
 }
 
@@ -105,6 +104,5 @@ int findstring(char **string_array, char *searched_string)
     }
 
     string_array = &penultimate_addr;
-    printf("\nIn Function: %p::%p\n", searched_string, penultimate_addr);
     return occurrences;
 }
