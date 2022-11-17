@@ -24,8 +24,10 @@ int main(int argc, char **argv)
     printf("\n");
 
     char *searched = argv[2];
-    int count = findstring(&string, searched);
-    printf("Address of penultimate substring, that has been found: %p.\nCount of substring-occurrences: %i\n", searched, count);
+    char ** string_ptr = &string;
+    int count = findstring(string_ptr, searched);
+    printf("Address of penultimate substring, that has been found: %p.\nCount of substring-occurrences: %i\n", string_ptr, count);
+    char* a = *string_ptr;
 
     if (string) 
       free(string);
@@ -77,7 +79,7 @@ int findstring(char **string_array, char *searched_string)
 {
     size_t length_of_searched = strlen(searched_string);
     if (length_of_searched == 0){
-        searched_string = NULL;
+        string_array = NULL;
         return 0;
     }
 
