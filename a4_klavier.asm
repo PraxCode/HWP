@@ -46,7 +46,7 @@ sseg7		equ 9eh		; Segmentanzeige 7
 tcfreq		equ 440		; initiale Frequenz
 basefreq	equ	1843200	; Basistakt in Hz
 nokey		equ 7		; keine Taste gedrueckt
-tone		dw 440
+
 
 start:
 
@@ -68,27 +68,59 @@ start:
 again:
 
 ; Code des Hintergrundprogammes
-	;in al, keybd
-	;out leds, al
-	mov al, 10110110b
-	out pitc, al
-	mov ax, basefreq/(987*2)
-	out pit2, al
+	; Keyboard
+	in al, keybd
+	mov ah, al 
+	out leds, al
+	and al, 00000111b ; Isolate last 3 bit to get row
+	cmp al, 7
+	je no_tone
+
+	; Determine Row and Column
+	times 3 shr ah, 1
+	cmp al, 6
+	je fertig
+
+
+	cmp al, 5
+	jne next
+	add ah, 8
+	jmp fertig
+next:	add ah, 16
+fertig: ; ah = code
+	mov bx, tonleiter
 	mov al, ah
-	out pit2, al
-	
-	mov al, status
-	add al, ppi_pa3
-	and al, ppi_pa3
-	out ppi_a, al
-	sub al, ppi_pa3
-	and al, ppi_pa3
-	out ppi_a, al
+	mov ah, 0
+	shl al, 1
+	add bx, ax
+	mov bx, [bx]
+	mov ah, 03
+	mov dl, 05
+	int 6
+	shl bx, 1
+	mov dx, basefreq >> 16
+	mov ax, basefreq & 0xFFFF
+	div bx ; Res in ax
 
 	
-		
-	jmp again
+	out pit1, al
+	mov al, ah
+	out pit1, al
+
+	test byte [status], 00001000b
+	jz ton
 	
+	
+	jmp again
+ton: 
+	or byte [status], 00001000b 	
+	jmp again
+
+
+no_tone: 
+	and byte [status], ~00001000b
+
+	jmp again
 		
 ; Initialisierung Controller und Interruptsystem
 
@@ -143,8 +175,16 @@ isr_freqtimer: 				; Timer fuer Lautsprecher
 	push ax	
 
 ; Code der Serviceroutine fuer die Lautsprecherausgabe	
+	; Membran ansteuern
+	test byte [status], 00001000b
+	jz isr_freqtimer_out 
+	in al, ppi_a
+	xor al, ppi_pa3
+	out ppi_a, al
+
 	
 isr_freqtimer_out: 		; Ausgang aus dem Service
+
 	mov al, eoi			; EOI an PIC
 	out ocw_2_3, al
 	pop ax
