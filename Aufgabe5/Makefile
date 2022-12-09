@@ -1,7 +1,7 @@
 AS = nasm
 CC = gcc
 ASMFLAGS = -f elf64
-CFLAGS = -c -Wall -Wextra
+CFLAGS = -Wall -Wextra -m64
 
 SOURCE_DIR = source
 BUILD_DIR = build
@@ -14,6 +14,7 @@ OBJECT_FILES := $(patsubst $(SOURCE_DIR)/%.asm, $(BUILD_DIR)/%.o, $(ASM_FILES))
 OBJECT_FILES += $(patsubst $(SOURCE_DIR)/%.c, $(BUILD_DIR)/%.o, $(C_FILES))
 
 $(BINARY): $(OBJECT_FILES)
+	@echo -e "\n"
 	$(CC) $(OBJECT_FILES) -o $(BINARY)
 
 $(BUILD_DIR):
@@ -24,10 +25,6 @@ $(BUILD_DIR)/%.o: $(SOURCE_DIR)/%.asm $(BUILD_DIR)
 
 $(BUILD_DIR)/%.o: $(SOURCE_DIR)/%.c $(BUILD_DIR)
 	$(CC) -c $(CFLAGS) $< -o $@
-
-
-run: $(BINARY)
-	./$(BINARY)
 
 clean:
 	rm -f $(BINARY)

@@ -17,10 +17,11 @@ void build_result_info(result_info *ri, char **argv) {
 
   ri->result = addsub(ri->num1, ri->num2, ri->operation, ri->flags);
 }
-
+/*
 void print_flags(unsigned short *flags) {}
 void cite_signed(result_info *ri) {}
 void cite_unsigned(result_info *ri) {}
+*/
 
 int main(int argc, char *argv[]) {
   if (argc != 3) {
@@ -30,9 +31,11 @@ int main(int argc, char *argv[]) {
   result_info ri;
   build_result_info(&ri, argv);
 
+  /*
   print_flags(ri.flags);
   cite_signed(&ri);
   cite_unsigned(&ri);
+  */
 
   return 0;
 }
