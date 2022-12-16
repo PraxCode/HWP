@@ -1,7 +1,7 @@
 AS = nasm
 CC = gcc
-ASMFLAGS = -f elf64
-CFLAGS = -Wall -Wextra -m64
+ASMFLAGS = -f elf32
+CFLAGS = -m32 -Wall -Wextra
 
 SOURCE_DIR = source
 BUILD_DIR = build
@@ -15,7 +15,7 @@ OBJECT_FILES += $(patsubst $(SOURCE_DIR)/%.c, $(BUILD_DIR)/%.o, $(C_FILES))
 
 $(BINARY): $(OBJECT_FILES)
 	@echo -e "\n"
-	$(CC) $(OBJECT_FILES) -o $(BINARY)
+	$(CC) -m32 $(OBJECT_FILES) -o $(BINARY)
 
 $(BUILD_DIR):
 	mkdir -p $(BUILD_DIR)
